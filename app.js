@@ -44,6 +44,7 @@ let nextWords = [];  // Array of words to be displayed next
 let futureWords = [];  // Array of words to be displayed after nextWords
 let currentSlowWords = []; // Array to store the current slow words
 let lineIndex = 0; // Keep track of which line we're on
+let wordIndex = 0; // Keep track of which word we're on in the current line
 
 /**
  * Function to display words on the screen
@@ -75,7 +76,8 @@ function displayWords() {
         lineWords.forEach((word, wordIndex) => {
             let wordSpan = document.createElement('span');
             wordSpan.textContent = word;
-            wordSpan.id = ['word', 'nextword', 'futureword'][index] + wordIndex;
+            wordSpan.id = `line${index}word${wordIndex}`;
+            wordSpan.className = ''; // Reset the class
             wordLine.appendChild(wordSpan);
         });
         wordsContainer.appendChild(wordLine);
@@ -84,6 +86,7 @@ function displayWords() {
     // Set the start time for the first word
     wordStart = Date.now();
     lineIndex = 0;
+    wordIndex = 0;
 }
 
 let lastWord = '';
@@ -112,7 +115,7 @@ function getRandomWords(wordsArray, count) {
 function checkInput(value) {
     if (value.endsWith(' ')) {
         let typedWord = value.trim();
-        let correctWord = currentWords[0];
+        let correctWord = currentWords[wordIndex];
 
         let wordEnd = Date.now();
         let wordTime = wordEnd - wordStart;
@@ -121,12 +124,13 @@ function checkInput(value) {
         words[correctWord].times.push(wordTime);
         words[correctWord].total++;
 
+        // Check if the typed word is correct and apply appropriate highlighting
         let isCorrect = typedWord === correctWord;
         if (isCorrect) {
             words[correctWord].correct++;
-            document.getElementById('word0').classList.add('correct');
+            document.getElementById(`line${lineIndex}word${wordIndex}`).classList.add('correct');
         } else {
-            document.getElementById('word0').classList.add('incorrect');
+            document.getElementById(`line${lineIndex}word${wordIndex}`).classList.add('incorrect');
         }
 
         // Update last ten correct attempts
@@ -140,32 +144,30 @@ function checkInput(value) {
 
         // Save updated word data to localStorage
         localStorage.setItem('words', JSON.stringify(words));
+        
+        // Reset word start time for the next word
         wordStart = wordEnd;
 
-        // Remove the typed word from currentWords
-        currentWords.shift();
+        // Move to the next word
+        wordIndex++;
 
-        // Update DOM elements
-        let typedWordElement = document.getElementById('word0');
-        if (typedWordElement) {
-            typedWordElement.id = 'typed';
-        }
+        // Check if we've reached the end of a line
+        if (wordIndex === wordsPerLine) {
+            wordIndex = 0;  // Reset word index for the new line
+            lineIndex++;    // Move to the next line
 
-        for (let i = 0; i < currentWords.length; i++) {
-            let wordElement = document.getElementById('word' + (i + 1));
-            if (wordElement) {
-                wordElement.id = 'word' + i;
+            // Update currentWords when moving to the second line
+            if (lineIndex === 1) {
+                currentWords = nextWords;
             }
-        }
 
-        // If all words have been typed, display new words
-        if (currentWords.length === 0) {
-            lineIndex++;
-            if (lineIndex < 3) {
-                shiftWords();
-                updateWordDisplay();
-            } else {
-                displayWords(); // Reset everything when we finish the third line
+            // Check if we've completed the second line
+            if (lineIndex === 2) {
+                shiftWords();         // Update word arrays
+                updateWordDisplay();  // Update the display
+                lineIndex = 1;        // Set to the middle line
+                currentWords = nextWords; // Update currentWords to the new middle line
+                wordStart = Date.now(); // Reset timing for the new line
             }
         }
 
@@ -336,35 +338,38 @@ function displayStats() {
 }
 
 function shiftWords() {
+    // Shift word arrays: current becomes next, next becomes future
     currentWords = nextWords;
     nextWords = futureWords;
+    // Generate new future words
     futureWords = getRandomWords(currentSlowWords, wordsPerLine);
-    wordStart = Date.now(); // Reset timing for the new line
 }
 
 function updateWordDisplay() {
     let wordsContainer = document.getElementById('wordsContainer');
     
-    if (wordsContainer.children.length < 2) {
-        displayWords(); // Safety check: if we somehow have less than 2 lines, reset everything
-        return;
-    }
-    
+    // Remove the first (top) line
     wordsContainer.removeChild(wordsContainer.firstChild);
     
-    let lines = wordsContainer.children;
-    for (let i = 0; i < lines.length; i++) {
-        let words = lines[i].children;
+    // Update IDs and content of remaining lines
+    for (let i = 0; i < 2; i++) {
+        let words = wordsContainer.children[i].children;
+        let wordArray = i === 0 ? currentWords : nextWords;
         for (let j = 0; j < words.length; j++) {
-            words[j].id = ['word', 'nextword'][i] + j;
+            // Update the ID to reflect the new line position
+            words[j].id = `line${i}word${j}`;
+            // Update the word text
+            words[j].textContent = wordArray[j];
+            // No class clearing here
         }
     }
     
+    // Add new line at the bottom
     let newLine = document.createElement('p');
     futureWords.forEach((word, index) => {
         let wordSpan = document.createElement('span');
         wordSpan.textContent = word;
-        wordSpan.id = 'futureword' + index;
+        wordSpan.id = `line2word${index}`;
         newLine.appendChild(wordSpan);
     });
     wordsContainer.appendChild(newLine);
