@@ -13,8 +13,7 @@ body {
 }
 
 .allContent {
-    width: 90%;
-    max-width: 1200px;
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 300px;
     gap: 30px;
