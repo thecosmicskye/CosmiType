@@ -1,4 +1,22 @@
-// Load words from LocalStorage
+/**
+ * Typing Practice Application
+ * 
+ * This application is designed to help users improve their typing speed and accuracy.
+ * It focuses on practicing with commonly used English words and tracks user performance.
+ * The app dynamically adjusts to user performance, presenting more challenging words
+ * as the user improves.
+ * 
+ * Key Features:
+ * - Presents words for typing practice
+ * - Tracks typing speed and accuracy for each word
+ * - Focuses on slower words to improve overall typing performance
+ * - Displays statistics on typing performance
+ * - Stores user progress locally
+ * 
+ * The application uses localStorage to persist user data between sessions.
+ */
+
+// Load words from LocalStorage or initialize with default word list
 // This array contains a list of common English words
 let wordArray = ["able", "about", "above", "add", "after", "again", "air", "all", "almost", "along", "also", "always", "an", "and", "animal", "another", "answer", "any", "are", "around", "as", "ask", "at", "away", "back", "be", "because", "become", "been", "before", "began", "begin", "below", "between", "big", "book", "both", "boy", "bring", "build", "but", "button", "buy", "by", "cable", "call", "came", "can", "car", "carry", "change", "CharaChorder", "child", "children", "city", "close", "code", "come", "computer", "con", "consider", "could", "country", "course", "cut", "day", "develop", "did", "difference", "different", "do", "does", "don't", "down", "download", "each", "early", "earth", "eat", "EMG", "end", "engineer", "enough", "even", "ever", "every", "example", "eye", "face", "fact", "family", "far", "fast", "father", "feel", "feet", "few", "fill", "find", "fine", "fire", "first", "follow", "food", "for", "form", "found", "four", "from", "general", "get", "girl", "give", "go", "gone", "good", "got", "govern", "great", "group", "grow", "had", "hand", "happen", "hard", "has", "have", "Hazel", "he", "head", "hear", "hello", "help", "her", "here", "hi", "high", "him", "his", "hit", "hold", "home", "hope", "house", "how", "however", "Hulet", "I'll", "I'm", "idea", "if", "important", "in", "increase", "interest", "into", "is", "isn't", "issue", "it", "it's", "just", "keep", "kind", "know", "land", "large", "last", "late", "later", "lead", "learn", "leave", "left", "let", "letter", "life", "light", "like", "line", "list", "little", "live", "load", "long", "look", "lose", "lot", "made", "make", "man", "many", "may", "me", "mean", "men", "menu", "might", "mile", "mind", "miss", "more", "most", "mother", "mountain", "move", "much", "must", "my", "name", "nation", "near", "need", "never", "new", "next", "nice", "night", "no", "Nostrand", "not", "note", "nothing", "now", "number", "of", "off", "often", "oil", "old", "on", "once", "one", "only", "open", "or", "order", "other", "our", "out", "over", "own", "page", "paper", "part", "past", "people", "person", "picture", "place", "plan", "plant", "play", "point", "possible", "present", "print", "problem", "probably", "program", "public", "put", "question", "quick", "quickly", "quite", "read", "real", "really", "review", "right", "river", "run", "said", "same", "saw", "say", "school", "screen", "sea", "second", "see", "seem", "seen", "sentence", "set", "she", "should", "show", "side", "sin", "since", "site", "small", "so", "some", "something", "sometime", "song", "soon", "sound", "spell", "stand", "start", "state", "still", "stop", "store", "story", "study", "such", "super", "sure", "system", "take", "talk", "team", "tell", "than", "thank", "that", "the", "their", "them", "then", "there", "these", "they", "thing", "think", "this", "those", "though", "thought", "three", "through", "time", "tip", "to", "together", "too", "took", "top", "tree", "try", "turn", "two", "type", "under", "until", "up", "us", "use", "used", "very", "walk", "want", "was", "watch", "water", "way", "we", "week", "well", "went", "were", "what", "when", "where", "which", "while", "white", "who", "why", "wide", "will", "with", "without", "won't", "word", "work", "world", "would", "write", "year", "you", "young", "your"];
 
@@ -26,7 +44,11 @@ let nextWords = [];  // Array of words to be displayed next
 let futureWords = [];  // Array of words to be displayed after nextWords
 let currentSlowWords = []; // Array to store the current slow words
 
-// Function to display words on the screen
+/**
+ * Function to display words on the screen
+ * This function generates and displays three lines of words,
+ * with each line containing a mix of slow words and random words.
+ */
 function displayWords() {
     let wordsContainer = document.getElementById('wordsContainer');
     wordsContainer.innerHTML = ''; // Clear the words container
@@ -64,7 +86,12 @@ function displayWords() {
 
 let lastWord = '';
 
-// Function to get random words from an array
+/**
+ * Function to get random words from an array
+ * @param {Array} wordsArray - The array of words to choose from
+ * @param {number} count - The number of words to return
+ * @returns {Array} An array of randomly selected words
+ */
 function getRandomWords(wordsArray, count) {
     let randomWords = [];
     for (let i = 0; i < count; i++) {
@@ -74,7 +101,12 @@ function getRandomWords(wordsArray, count) {
     return randomWords;
 }
 
-// Function to check user input and update statistics
+/**
+ * Function to check user input and update statistics
+ * This function is called every time the user types in the input field.
+ * It checks if the typed word is correct, updates statistics, and manages the display of words.
+ * @param {string} value - The current value of the input field
+ */
 function checkInput(value) {
     if (value.endsWith(' ')) {
         let typedWord = value.trim();
@@ -135,7 +167,12 @@ function checkInput(value) {
     }
 }
 
-// Function to calculate word statistics
+/**
+ * Function to calculate word statistics
+ * This function processes the stored word data and calculates various statistics,
+ * including average WPM for each word.
+ * @returns {Array} An array of objects containing statistics for each word
+ */
 function calculateWordStats() {
     return Object.keys(words).map((word) => {
         let wordWeight = weightedWords ? word.length / 5 : 1;
@@ -154,7 +191,13 @@ function calculateWordStats() {
     });
 }
 
-// Function to get the slowest words
+/**
+ * Function to get the slowest words
+ * This function identifies the slowest words based on average WPM and typing frequency.
+ * It ensures a mix of untyped and slow typed words.
+ * @param {number} count - The number of slow words to return
+ * @returns {Array} An array of the slowest words
+ */
 function getSlowestWords(count) {
     let wordStats = calculateWordStats();
     wordStats.sort((a, b) => a.averageWPM - b.averageWPM);
@@ -186,7 +229,11 @@ function getSlowestWords(count) {
     return slowestWords;
 }
 
-// Function to display statistics
+/**
+ * Function to display statistics
+ * This function creates and updates the statistics table shown to the user.
+ * It displays overall typing speed and individual word statistics.
+ */
 function displayStats() {
     let stats = calculateWordStats();
     
@@ -293,12 +340,3 @@ window.onload = function() {
 // Initial display of words and statistics
 displayWords();
 displayStats();
-
-// Add this new function to shuffle an array
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
