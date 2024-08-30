@@ -43,6 +43,7 @@ let currentWords = [];  // Array of words currently displayed
 let nextWords = [];  // Array of words to be displayed next
 let futureWords = [];  // Array of words to be displayed after nextWords
 let currentSlowWords = []; // Array to store the current slow words
+let lineIndex = 0; // Keep track of which line we're on
 
 /**
  * Function to display words on the screen
@@ -82,6 +83,7 @@ function displayWords() {
 
     // Set the start time for the first word
     wordStart = Date.now();
+    lineIndex = 0;
 }
 
 let lastWord = '';
@@ -158,7 +160,13 @@ function checkInput(value) {
 
         // If all words have been typed, display new words
         if (currentWords.length === 0) {
-            displayWords();
+            lineIndex++;
+            if (lineIndex < 3) {
+                shiftWords();
+                updateWordDisplay();
+            } else {
+                displayWords(); // Reset everything when we finish the third line
+            }
         }
 
         // Clear input field and update statistics display
@@ -325,6 +333,41 @@ function displayStats() {
     let wordStatsContainer = document.getElementById('wordStats');
     wordStatsContainer.innerHTML = '';
     wordStatsContainer.appendChild(statsTable);
+}
+
+function shiftWords() {
+    currentWords = nextWords;
+    nextWords = futureWords;
+    futureWords = getRandomWords(currentSlowWords, wordsPerLine);
+    wordStart = Date.now(); // Reset timing for the new line
+}
+
+function updateWordDisplay() {
+    let wordsContainer = document.getElementById('wordsContainer');
+    
+    if (wordsContainer.children.length < 2) {
+        displayWords(); // Safety check: if we somehow have less than 2 lines, reset everything
+        return;
+    }
+    
+    wordsContainer.removeChild(wordsContainer.firstChild);
+    
+    let lines = wordsContainer.children;
+    for (let i = 0; i < lines.length; i++) {
+        let words = lines[i].children;
+        for (let j = 0; j < words.length; j++) {
+            words[j].id = ['word', 'nextword'][i] + j;
+        }
+    }
+    
+    let newLine = document.createElement('p');
+    futureWords.forEach((word, index) => {
+        let wordSpan = document.createElement('span');
+        wordSpan.textContent = word;
+        wordSpan.id = 'futureword' + index;
+        newLine.appendChild(wordSpan);
+    });
+    wordsContainer.appendChild(newLine);
 }
 
 // Initialize the application when the window loads
