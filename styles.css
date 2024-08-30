@@ -155,3 +155,37 @@ h1 {
         width: 100%;
     }
 }
+
+.settings {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings label {
+    margin-right: 10px;
+    color: #cdd6f4;
+}
+
+#slowWordsInput {
+    width: 60px;
+    padding: 5px;
+    font-size: 1em;
+    border-radius: 5px;
+    background-color: #45475a;
+    color: #cdd6f4;
+    border: none;
+    text-align: center;
+}
+
+#slowWordsInput:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #f9e2af;
+}
+
+#slowWordsInput::-webkit-inner-spin-button, 
+#slowWordsInput::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    margin: 0;
+}
