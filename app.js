@@ -33,7 +33,7 @@ words = storedWords ? JSON.parse(storedWords) : words;
 // Constants for application settings
 const slowWordsNum = 5;  // Number of slow words to focus on
 const weightedWords = false;  // Flag to determine if word length should affect WPM calculation
-const wordsPerLine = 8;
+const wordsPerLine = 6;
 
 // Global variables
 let slowestWords = [];  // Array to store the slowest words
@@ -45,6 +45,7 @@ let futureWords = [];  // Array of words to be displayed after nextWords
 let lineIndex = 0; // Keep track of which line we're on
 let wordIndex = 0; // Keep track of which word we're on in the current line
 let selectedSlowWords = []; // New global variable to store the selected slow words
+let width = 200;
 
 /**
  * Function to display words on the screen
@@ -83,10 +84,31 @@ function displayWords() {
         wordsContainer.appendChild(wordLine);
     });
 
+    // Adjust container size if necessary
+    adjustContainerSize(wordsContainer);
+
     // Set the start time for the first word
     wordStart = Date.now();
     lineIndex = 0;
     wordIndex = 0;
+}
+
+function adjustContainerSize(container) {
+    const containerRect = container.getBoundingClientRect();
+    
+    const computedStyle = window.getComputedStyle(container);
+    const paddingLeft = parseFloat(computedStyle.paddingLeft);
+    const paddingRight = parseFloat(computedStyle.paddingRight);
+    const containerScrollWidth = container.scrollWidth - paddingRight - paddingLeft;
+    const contentWidth = containerRect.width - (paddingLeft + paddingRight);
+    width = Math.max(contentWidth, width, containerScrollWidth);
+    if(contentWidth < containerScrollWidth - 1){
+        container.style.width = `${width + paddingRight}px`;
+    }
+    else{
+        container.style.width = `${width}px`;
+    }
+    
 }
 
 let lastWord = '';
@@ -388,6 +410,7 @@ function shiftWords() {
     nextWords = futureWords;
     // Generate new future words from the updated slow words
     futureWords = getRandomWords(selectedSlowWords, wordsPerLine);
+
 }
 
 function updateWordDisplay() {
@@ -418,6 +441,10 @@ function updateWordDisplay() {
         newLine.appendChild(wordSpan);
     });
     wordsContainer.appendChild(newLine);
+
+
+    // Adjust container size after shifting words
+    adjustContainerSize(document.getElementById('wordsContainer'));
 }
 
 // Initialize the application when the window loads
@@ -426,8 +453,6 @@ window.onload = function() {
     document.getElementById('wordInput').addEventListener('input', function() {
         checkInput(this.value);
     });
-    displayWords();
-    displayStats();
 };
 
 // Initial display of words and statistics
