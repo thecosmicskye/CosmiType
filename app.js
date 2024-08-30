@@ -338,10 +338,14 @@ function displayStats() {
 }
 
 function shiftWords() {
-    // Shift word arrays: current becomes next, next becomes future
+    // Update the current slow words
+    currentSlowWords = getSlowestWords(slowWordsNum);
+
+    // Shift word arrays: current becomes next
     currentWords = nextWords;
+    // Move future words to next
     nextWords = futureWords;
-    // Generate new future words
+    // Generate new future words from the updated slow words
     futureWords = getRandomWords(currentSlowWords, wordsPerLine);
 }
 
