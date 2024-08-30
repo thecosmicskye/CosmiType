@@ -99,9 +99,16 @@ let lastWord = '';
  */
 function getRandomWords(wordsArray, count) {
     let randomWords = [];
+    let lastWord = '';
     for (let i = 0; i < count; i++) {
-        let randomIndex = Math.floor(Math.random() * wordsArray.length);
-        randomWords.push(wordsArray[randomIndex]);
+        let randomIndex;
+        let selectedWord;
+        do {
+            randomIndex = Math.floor(Math.random() * wordsArray.length);
+            selectedWord = wordsArray[randomIndex];
+        } while (selectedWord === lastWord && wordsArray.length > 1);
+        randomWords.push(selectedWord);
+        lastWord = selectedWord;
     }
     return randomWords;
 }
