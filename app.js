@@ -200,7 +200,16 @@ function getSlowestWords(count) {
 // Function to display statistics
 function displayStats() {
     let stats = calculateWordStats();
-    stats.sort((a, b) => a.averageWPM - b.averageWPM);
+    
+    // Sort stats: never-typed words first, then by averageWPM
+    stats.sort((a, b) => {
+        if (a.averageWPM === Infinity && b.averageWPM === Infinity) {
+            return a.word.localeCompare(b.word); // Alphabetical order for never-typed words
+        }
+        if (a.averageWPM === Infinity) return -1; // Never-typed words come first
+        if (b.averageWPM === Infinity) return 1;
+        return a.averageWPM - b.averageWPM; // Sort by WPM for typed words
+    });
 
     let slowWords = getSlowestWords(slowWordsNum);
 
@@ -247,7 +256,11 @@ function displayStats() {
         if (slowWords.includes(word)) {
             row.classList.add('slow');
         }
-        [word, total, averageWPM === Infinity ? 'Never typed' : averageWPM.toFixed(2)].forEach(text => {
+        [
+            word, 
+            total, 
+            averageWPM === Infinity ? 'Never typed' : averageWPM.toFixed(2)
+        ].forEach(text => {
             let td = document.createElement('td');
             td.textContent = text;
             row.appendChild(td);
