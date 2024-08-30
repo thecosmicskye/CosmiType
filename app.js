@@ -24,12 +24,14 @@ let wordStart;  // Timestamp for when the current word started
 let currentWords = [];  // Array of words currently displayed
 let nextWords = [];  // Array of words to be displayed next
 let futureWords = [];  // Array of words to be displayed after nextWords
+let currentSlowWords = []; // Array to store the current slow words
 
 // Function to display words on the screen
 function displayWords() {
     let wordsContainer = document.getElementById('wordsContainer');
     wordsContainer.innerHTML = ''; // Clear the words container
     let slowWords = getSlowestWords(slowWordsNum);
+    currentSlowWords = slowWords; // Store the current slow words
     if (nextWords.length === 0) {
         nextWords = getRandomWords(slowWords, wordsPerLine);
     }
@@ -201,17 +203,32 @@ function getSlowestWords(count) {
 function displayStats() {
     let stats = calculateWordStats();
     
-    // Sort stats: never-typed words first, then by averageWPM
-    stats.sort((a, b) => {
+    // Separate current slow words from other words
+    let slowWordStats = stats.filter(stat => currentSlowWords.includes(stat.word));
+    let otherWordStats = stats.filter(stat => !currentSlowWords.includes(stat.word));
+    
+    // Sort slow words: never-typed first, then by averageWPM
+    slowWordStats.sort((a, b) => {
         if (a.averageWPM === Infinity && b.averageWPM === Infinity) {
-            return a.word.localeCompare(b.word); // Alphabetical order for never-typed words
+            return a.word.localeCompare(b.word);
         }
-        if (a.averageWPM === Infinity) return -1; // Never-typed words come first
+        if (a.averageWPM === Infinity) return -1;
         if (b.averageWPM === Infinity) return 1;
-        return a.averageWPM - b.averageWPM; // Sort by WPM for typed words
+        return a.averageWPM - b.averageWPM;
     });
-
-    let slowWords = getSlowestWords(slowWordsNum);
+    
+    // Sort other words: never-typed first, then by averageWPM
+    otherWordStats.sort((a, b) => {
+        if (a.averageWPM === Infinity && b.averageWPM === Infinity) {
+            return a.word.localeCompare(b.word);
+        }
+        if (a.averageWPM === Infinity) return -1;
+        if (b.averageWPM === Infinity) return 1;
+        return a.averageWPM - b.averageWPM;
+    });
+    
+    // Combine sorted arrays: slow words first, then other words
+    stats = [...slowWordStats, ...otherWordStats];
 
     // Calculate overall average WPM
     let overallAverageWPM = 0;
@@ -253,7 +270,7 @@ function displayStats() {
 
     stats.forEach(({ word, total, averageWPM }) => {
         let row = document.createElement('tr');
-        if (slowWords.includes(word)) {
+        if (currentSlowWords.includes(word)) {
             row.classList.add('slow');
         }
         [
