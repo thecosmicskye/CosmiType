@@ -31,7 +31,7 @@ let storedWords = localStorage.getItem('words');
 words = storedWords ? JSON.parse(storedWords) : words;
 
 // Constants for application settings
-const slowWordsNum = 5;  // Number of slow words to focus on
+let slowWordsNum = 5;  // Default value, will be updated by input
 const weightedWords = false;  // Flag to determine if word length should affect WPM calculation
 const wordsPerLine = 6;
 
@@ -447,12 +447,26 @@ function updateWordDisplay() {
     adjustContainerSize(document.getElementById('wordsContainer'));
 }
 
+function updateSlowWordsNum() {
+    const input = document.getElementById('slowWordsInput');
+    const newValue = parseInt(input.value);
+    if (newValue > 0) {
+        slowWordsNum = newValue;
+        displayWords();  // Refresh the word display
+        displayStats();  // Refresh the stats display
+    } else {
+        input.value = slowWordsNum;  // Reset to previous valid value
+    }
+}
+
 // Initialize the application when the window loads
 window.onload = function() {
     document.getElementById('wordInput').focus();
     document.getElementById('wordInput').addEventListener('input', function() {
         checkInput(this.value);
     });
+    document.getElementById('slowWordsInput').addEventListener('change', updateSlowWordsNum);
+    document.getElementById('slowWordsInput').value = slowWordsNum;  // Set initial value
 };
 
 // Initial display of words and statistics
