@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CosmicType - Typing Practice Program</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <!-- Remove the static CSS link -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -23,13 +23,22 @@
     </div>
     <script>
         // Cache busting function
-        function loadScript(url) {
-            var script = document.createElement('script');
-            script.src = url + '?v=' + Date.now();
-            document.body.appendChild(script);
+        function loadResource(url, type) {
+            var element;
+            if (type === 'script') {
+                element = document.createElement('script');
+                element.src = url + '?v=' + Date.now();
+            } else if (type === 'style') {
+                element = document.createElement('link');
+                element.rel = 'stylesheet';
+                element.href = url + '?v=' + Date.now();
+            }
+            document.head.appendChild(element);
         }
+        // Load the CSS file with cache busting
+        loadResource('styles.css', 'style');
         // Load the app.js file with cache busting
-        loadScript('app.js');
+        loadResource('app.js', 'script');
     </script>
 </body>
 </html>
