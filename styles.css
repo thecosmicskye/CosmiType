@@ -54,6 +54,8 @@ h1 {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     font-size: 2em;
     line-height: 1.5;
+    max-width: 1200px;
+    transition: width 0.3s ease;
 }
 
 #wordsContainer p {
