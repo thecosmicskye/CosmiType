@@ -16,6 +16,15 @@
         </div>
         <div id="wordStats"></div>
     </div>
-    <script src="app.js"></script>
+    <script>
+        // Cache busting function
+        function loadScript(url) {
+            var script = document.createElement('script');
+            script.src = url + '?v=' + Date.now();
+            document.body.appendChild(script);
+        }
+        // Load the app.js file with cache busting
+        loadScript('app.js');
+    </script>
 </body>
 </html>
