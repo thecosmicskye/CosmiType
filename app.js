@@ -30,47 +30,33 @@ let currentSlowWords = []; // Array to store the current slow words
 function displayWords() {
     let wordsContainer = document.getElementById('wordsContainer');
     wordsContainer.innerHTML = ''; // Clear the words container
-    let slowWords = getSlowestWords(slowWordsNum);
-    currentSlowWords = slowWords; // Store the current slow words
-    if (nextWords.length === 0) {
-        nextWords = getRandomWords(slowWords, wordsPerLine);
-    }
-    if (futureWords.length === 0) {
-        futureWords = getRandomWords(slowWords, wordsPerLine);
-    }
-    currentWords = nextWords;
-    nextWords = futureWords;
-    futureWords = getRandomWords(slowWords, wordsPerLine);
+    
+    // Get the slowest words
+    currentSlowWords = getSlowestWords(slowWordsNum);
+    
+    // Generate three lines of words, each containing 8 words chosen from the 5 slow words
+    let lines = [
+        getRandomWords(currentSlowWords, wordsPerLine),
+        getRandomWords(currentSlowWords, wordsPerLine),
+        getRandomWords(currentSlowWords, wordsPerLine)
+    ];
+    
+    // Set the current, next, and future words
+    currentWords = lines[0];
+    nextWords = lines[1];
+    futureWords = lines[2];
 
-    // Create and display current words
-    let wordLine = document.createElement('p');
-    for (let i = 0; i < currentWords.length; i++) {
-        let wordSpan = document.createElement('span');
-        wordSpan.textContent = currentWords[i];
-        wordSpan.id = 'word' + i;
-        wordLine.appendChild(wordSpan);
-    }
-    wordsContainer.appendChild(wordLine);
-
-    // Create and display next words
-    let wordLine2 = document.createElement('p');
-    for (let i = 0; i < nextWords.length; i++) {
-        let wordSpan = document.createElement('span');
-        wordSpan.textContent = nextWords[i];
-        wordSpan.id = 'nextword' + i;
-        wordLine2.appendChild(wordSpan);
-    }
-    wordsContainer.appendChild(wordLine2);
-
-    // Create and display future words
-    let wordLine3 = document.createElement('p');
-    for (let i = 0; i < futureWords.length; i++) {
-        let wordSpan = document.createElement('span');
-        wordSpan.textContent = futureWords[i];
-        wordSpan.id = 'futureword' + i;
-        wordLine3.appendChild(wordSpan);
-    }
-    wordsContainer.appendChild(wordLine3);
+    // Create and display the three lines
+    lines.forEach((lineWords, index) => {
+        let wordLine = document.createElement('p');
+        lineWords.forEach((word, wordIndex) => {
+            let wordSpan = document.createElement('span');
+            wordSpan.textContent = word;
+            wordSpan.id = ['word', 'nextword', 'futureword'][index] + wordIndex;
+            wordLine.appendChild(wordSpan);
+        });
+        wordsContainer.appendChild(wordLine);
+    });
 
     // Set the start time for the first word
     wordStart = Date.now();
@@ -80,21 +66,12 @@ let lastWord = '';
 
 // Function to get random words from an array
 function getRandomWords(wordsArray, count) {
-    try {
-        let randomWords = [];
-        while (randomWords.length < count) {
-            let randomIndex;
-            do {
-                randomIndex = Math.floor(Math.random() * wordsArray.length);
-            } while (wordsArray[randomIndex] === lastWord);
-            randomWords.push(wordsArray[randomIndex]);
-            lastWord = wordsArray[randomIndex];
-        }
-        return randomWords;
-    } catch (error) {
-        console.error("An error occurred while getting random words:", error);
-        return [];
+    let randomWords = [];
+    for (let i = 0; i < count; i++) {
+        let randomIndex = Math.floor(Math.random() * wordsArray.length);
+        randomWords.push(wordsArray[randomIndex]);
     }
+    return randomWords;
 }
 
 // Function to check user input and update statistics
@@ -184,16 +161,26 @@ function getSlowestWords(count) {
 
     let slowestWords = [];
     let untypedWords = wordStats.filter(w => w.averageWPM === Infinity).map(w => w.word);
+    let typedWords = wordStats.filter(w => w.averageWPM !== Infinity).map(w => w.word);
+
+    // Fill with untyped words first
     while (slowestWords.length < count && untypedWords.length > 0) {
         let randomIndex = Math.floor(Math.random() * untypedWords.length);
         slowestWords.push(untypedWords[randomIndex]);
         untypedWords.splice(randomIndex, 1);
     }
 
-    let typedWords = wordStats.filter(w => w.averageWPM !== Infinity);
-    typedWords.reverse();
+    // Then fill with the slowest typed words
     while (slowestWords.length < count && typedWords.length > 0) {
-        slowestWords.push(typedWords.pop().word);
+        slowestWords.push(typedWords.shift());
+    }
+
+    // If we still don't have enough words, add random words from the original wordArray
+    while (slowestWords.length < count) {
+        let randomWord = wordArray[Math.floor(Math.random() * wordArray.length)];
+        if (!slowestWords.includes(randomWord)) {
+            slowestWords.push(randomWord);
+        }
     }
 
     return slowestWords;
@@ -276,7 +263,7 @@ function displayStats() {
         [
             word, 
             total, 
-            averageWPM === Infinity ? 'Never typed' : averageWPM.toFixed(2)
+            averageWPM === Infinity ? '-' : averageWPM.toFixed(2)
         ].forEach(text => {
             let td = document.createElement('td');
             td.textContent = text;
@@ -306,3 +293,12 @@ window.onload = function() {
 // Initial display of words and statistics
 displayWords();
 displayStats();
+
+// Add this new function to shuffle an array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
