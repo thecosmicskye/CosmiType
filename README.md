@@ -1,12 +1,10 @@
-# 🚀 CosmicType: Elevate Your Typing Skills to Stellar Heights! 🌟
-
 ![CosmicType Banner](https://cosmichazel.github.io/CosmicType/banner.png)
 
 ## 🌌 Embark on a Typing Adventure
 
 Welcome to CosmicType, where typing practice meets the cosmos! Our cutting-edge web application is designed to transform your typing skills from earthbound to interstellar. Whether you're a novice typist or a seasoned pro, CosmicType offers a personalized journey through the galaxy of words.
 
-## 🎯 [Launch Your Typing Odyssey Now!](https://cosmichazel.github.io/CosmicType/index.html)
+## 🎯 [Launch Your Typing Odyssey Now!](https://cosmichazel.github.io/CosmicType)
 
 ## ✨ Stellar Features
 
@@ -18,7 +16,7 @@ Welcome to CosmicType, where typing practice meets the cosmos! Our cutting-edge 
 
 ## 🛸 How to Navigate CosmicType
 
-1. 🖱️ Warp to the [CosmicType Launch Pad](https://cosmichazel.github.io/CosmicType/index.html).
+1. 🖱️ Warp to the [CosmicType Launch Pad](https://cosmichazel.github.io/CosmicType).
 2. 🚀 Initiate your typing sequence with the words on your viewscreen.
 3. 🔬 Our quantum computers analyze your keystrokes at the subatomic level.
 4. 🧠 The AI identifies your kryptonite words and beams them to you more frequently.
