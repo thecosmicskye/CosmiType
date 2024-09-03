@@ -397,6 +397,14 @@ function displayStats() {
     });
     statsTable.appendChild(overallRow);
 
+    // Create divider row
+    let dividerRow = document.createElement('tr');
+    dividerRow.classList.add('divider-row');
+    let dividerCell = document.createElement('td');
+    dividerCell.colSpan = 4;
+    dividerRow.appendChild(dividerCell);
+    statsTable.appendChild(dividerRow);
+
     // Create table body with individual word statistics
     let tableBody = document.createElement('tbody');
     stats.forEach(({ word, total, averageWPM }) => {

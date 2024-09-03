@@ -43,7 +43,7 @@ body {
     padding: 15px;
     padding-top: 9px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 60px);
     overflow-y: auto;
     overflow-x: hidden;
     position: fixed;
@@ -483,38 +483,34 @@ h1 {
 .statsTable .overall-row {
     background-color: #313244;
     color: #cdd6f4;
-    position: relative; /* Add this for pseudo-element positioning */
 }
 
 .statsTable .overall-row td {
     padding-top: 8px;
-    padding-bottom: 15px;
-    border-bottom: none; /* Remove any existing borders */
+    padding-bottom: 8px;
 }
 
-/* Create centered divider line */
-.statsTable .overall-row::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%; /* Adjust this value to change the length of the line */
+.statsTable .divider-row {
     height: 1.5px;
+    background-color: transparent !important;
+}
+
+.statsTable .divider-row td {
+    padding: 0;
+    background-color: transparent !important;
+}
+
+.statsTable .divider-row td::after {
+    content: '';
+    display: block;
+    width: 90%;
+    height: 2px;
+    margin: 0 auto;
     background-color: #6c7086;
 }
 
-/* Adjust cell padding as needed */
-.statsTable .overall-row td:first-child {
-    padding-left: 12px;
-}
-
-.statsTable .overall-row td:last-child {
-    padding-right: 12px;
-}
-
-/* Add some space after the Overall row */
-.statsTable .overall-row + tr td {
+/* Add some space after the divider row */
+.statsTable .divider-row + tr td {
     padding-top: 12px;
 }
 
