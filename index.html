@@ -10,17 +10,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
+    <div class="icon-container">
+        <label for="wordSetUpload" class="icon-button" data-tooltip="Upload custom word set">
+            <i class="fas fa-upload"></i>
+            <input type="file" id="wordSetUpload" accept=".json" style="display: none;">
+        </label>
+        <button id="restoreOriginalSet" class="icon-button" data-tooltip="Restore original word set">
+            <i class="fas fa-undo"></i>
+        </button>
+        <div class="focus-words-container" data-tooltip="Number of slow words to focus on">
+            <label for="slowWordsInput">Focus Words</label>
+            <input type="number" id="slowWordsInput" min="1" value="5">
+        </div>
+    </div>
     <div class="allContent">
         <div class="container">
             <h1>CosmicType</h1>
             <div id="wordsContainer"></div>
             <input type="text" id="wordInput" placeholder="Type here..." autocomplete="off">
-            <div class="settings">
-                <label for="slowWordsInput">Number of focus words:</label>
-                <input type="number" id="slowWordsInput" min="1" value="5">
-                <input type="file" id="wordSetUpload" accept=".json">
-                <button id="restoreOriginalSet">Restore Original Set</button>
-            </div>
         </div>
         <div id="wordStats"></div>
     </div>
