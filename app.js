@@ -30,6 +30,10 @@ wordArray.forEach(word => {
 let storedWords = localStorage.getItem('words');
 words = storedWords ? JSON.parse(storedWords) : words;
 
+// Load removedWords from localStorage
+let storedRemovedWords = localStorage.getItem('removedWords');
+let removedWords = storedRemovedWords ? JSON.parse(storedRemovedWords) : {};
+
 // Constants for application settings
 let slowWordsNum = 5;  // Default value, will be updated by input
 const weightedWords = false;  // Flag to determine if word length should affect WPM calculation
@@ -46,6 +50,8 @@ let lineIndex = 0; // Keep track of which line we're on
 let wordIndex = 0; // Keep track of which word we're on in the current line
 let selectedSlowWords = []; // New global variable to store the selected slow words
 let width = 200;
+
+let originalWordArray = [...wordArray];
 
 /**
  * Function to display words on the screen
@@ -459,6 +465,110 @@ function updateSlowWordsNum() {
     }
 }
 
+function filterWords(words) {
+    return words.filter(word => {
+        // Filter out words containing asterisks
+        if (word.includes('*')) return false;
+        
+        // Filter out words with repeating capital letters (2 or more)
+        if (/([A-Z])\1{1,}/.test(word)) return false;
+        
+        // Filter out words containing "DEL"
+        if (word.includes('DEL')) return false;
+              
+        return true;
+    });
+}
+
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const content = e.target.result;
+        try {
+            // Parse the custom format
+            const jsonContent = JSON.parse(content);
+            if (jsonContent.type === "backup" && Array.isArray(jsonContent.history) && jsonContent.history.length > 0) {
+                const chords = jsonContent.history[0][0].chords;
+                // Extract words from chords
+                let words = chords.map(chord => {
+                    // The word is in the second array of each chord
+                    return String.fromCharCode(...chord[1].filter(code => code !== 0 && code < 128));
+                }).filter(word => word.length > 0); // Remove empty strings
+                
+                // Apply the filter
+                words = filterWords(words);
+                
+                const newWordSet = Array.from(new Set(words)); // Remove duplicates
+                updateWordSet(newWordSet);
+            } else {
+                throw new Error("Invalid file format");
+            }
+        } catch (error) {
+            console.error('Error parsing file:', error);
+            alert('Invalid file format. Please upload a valid backup file.');
+        }
+    };
+    reader.readAsText(file);
+}
+
+function updateWordSet(newWordSet) {
+    if (newWordSet.length === 0) {
+        alert("No valid words found in the file. The word set will not be updated.");
+        return;
+    }
+
+    let tempWords = {...words, ...removedWords};
+    
+    removedWords = {};
+    Object.keys(tempWords).forEach(word => {
+        if (!newWordSet.includes(word)) {
+            removedWords[word] = tempWords[word];
+        }
+    });
+    
+    wordArray = newWordSet;
+    words = {};
+    wordArray.forEach(word => {
+        words[word] = tempWords[word] || {times: [], correct: 0, total: 0, lastTenCorrect: []};
+    });
+    
+    localStorage.setItem('words', JSON.stringify(words));
+    localStorage.setItem('removedWords', JSON.stringify(removedWords));
+    displayWords();
+    displayStats();
+    alert(`Word set updated with ${newWordSet.length} words. ${Object.keys(removedWords).length} words moved to removed set.`);
+}
+
+function restoreOriginalSet() {
+    let tempWords = {...words, ...removedWords};
+    
+    wordArray = [...originalWordArray];
+    words = {};
+    
+    wordArray.forEach(word => {
+        if (tempWords[word]) {
+            words[word] = tempWords[word];
+        } else {
+            words[word] = {times: [], correct: 0, total: 0, lastTenCorrect: []};
+        }
+    });
+    
+    // Instead of clearing removedWords, update it with words not in the original set
+    removedWords = {};
+    Object.keys(tempWords).forEach(word => {
+        if (!wordArray.includes(word)) {
+            removedWords[word] = tempWords[word];
+        }
+    });
+
+    localStorage.setItem('words', JSON.stringify(words));
+    localStorage.setItem('removedWords', JSON.stringify(removedWords)); // Store removedWords in localStorage
+    displayWords();
+    displayStats();
+    alert(`Original word set restored. ${wordArray.length} words in the current set, ${Object.keys(removedWords).length} words in removed set.`);
+}
+
 // Initialize the application when the window loads
 window.onload = function() {
     document.getElementById('wordInput').focus();
@@ -467,6 +577,8 @@ window.onload = function() {
     });
     document.getElementById('slowWordsInput').addEventListener('change', updateSlowWordsNum);
     document.getElementById('slowWordsInput').value = slowWordsNum;  // Set initial value
+    document.getElementById('wordSetUpload').addEventListener('change', handleFileUpload);
+    document.getElementById('restoreOriginalSet').addEventListener('click', restoreOriginalSet);
 };
 
 // Initial display of words and statistics
