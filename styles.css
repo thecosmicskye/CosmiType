@@ -14,10 +14,12 @@ body {
 
 .allContent {
     width: 100%;
+    max-width: 100%; /* Add this line */
     display: grid;
     grid-template-columns: 1fr 350px;
     gap: 30px;
     padding: 20px;
+    box-sizing: border-box; /* Add this line */
 }
 
 .container {
@@ -37,6 +39,34 @@ body {
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: calc(100vh - 80px); /* Increased the subtraction to 80px */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#wordStatsContainer {
+    height: 100%; /* Fill the entire height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Style the scrollbar */
+#wordStats::-webkit-scrollbar {
+    width: 8px;
+}
+
+#wordStats::-webkit-scrollbar-track {
+    background: #45475a;
+    border-radius: 10px;
+}
+
+#wordStats::-webkit-scrollbar-thumb {
+    background: #585b70;
+    border-radius: 10px;
+}
+
+#wordStats::-webkit-scrollbar-thumb:hover {
+    background: #6c6f85;
 }
 
 h1 {
@@ -99,6 +129,7 @@ h1 {
 
 .statsTable {
     width: 100%;
+    min-width: 300px; /* Add this line */
     border-collapse: separate;
     border-spacing: 0 8px;
     table-layout: fixed;
@@ -172,10 +203,16 @@ h1 {
 @media (max-width: 768px) {
     .allContent {
         grid-template-columns: 1fr;
+        padding: 10px 10px 20px; /* Added bottom padding */
     }
 
-    #wordInput {
-        width: 100%;
+    #wordStats {
+        max-height: calc(100vh - 100px); /* Increased the subtraction to 100px for mobile */
+    }
+
+    .statsTable th,
+    .statsTable td {
+        padding: 8px;
     }
 }
 

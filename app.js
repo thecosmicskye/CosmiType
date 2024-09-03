@@ -18,7 +18,7 @@
 
 // Load words from LocalStorage or initialize with default word list
 // This array contains a list of common English words
-let wordArray = ["able", "about", "above", "add", "after", "again", "air", "all", "almost", "along", "also", "always", "an", "and", "animal", "another", "answer", "any", "are", "around", "at", "away", "back", "be", "because", "become", "been", "before", "began", "begin", "below", "between", "big", "book", "both", "boy", "bring", "build", "but", "button", "buy", "by", "cable", "call", "came", "can", "car", "carry", "change", "CharaChorder", "child", "children", "city", "close", "code", "come", "computer", "con", "consider", "could", "country", "course", "cut", "day", "develop", "did", "difference", "different", "do", "does", "don't", "down", "download", "each", "early", "earth", "eat", "EMG", "end", "engineer", "enough", "even", "ever", "every", "example", "eye", "face", "fact", "family", "far", "fast", "father", "feel", "feet", "few", "fill", "find", "fine", "fire", "first", "follow", "food", "for", "form", "found", "four", "from", "general", "get", "girl", "give", "go", "gone", "good", "got", "govern", "great", "group", "grow", "had", "hand", "happen", "hard", "has", "have", "Hazel", "he", "head", "hear", "hello", "help", "her", "here", "hi", "high", "him", "his", "hit", "hold", "home", "hope", "house", "how", "however", "Hulet", "I'll", "I'm", "idea", "if", "important", "in", "increase", "interest", "into", "is", "isn't", "issue", "it", "it's", "just", "keep", "kind", "know", "land", "large", "last", "late", "later", "lead", "learn", "leave", "left", "let", "letter", "life", "light", "like", "line", "list", "little", "live", "load", "long", "look", "lose", "lot", "made", "make", "man", "many", "may", "me", "mean", "men", "menu", "might", "mile", "mind", "miss", "more", "most", "mother", "mountain", "move", "much", "must", "my", "name", "nation", "near", "need", "never", "new", "next", "nice", "night", "no", "Nostrand", "not", "note", "nothing", "now", "number", "of", "off", "often", "oil", "old", "on", "once", "one", "only", "open", "or", "order", "other", "our", "out", "over", "own", "page", "paper", "part", "past", "people", "person", "picture", "place", "plan", "plant", "play", "point", "possible", "present", "print", "problem", "probably", "program", "public", "put", "question", "quick", "quickly", "quite", "read", "real", "really", "review", "right", "river", "run", "said", "same", "saw", "say", "school", "screen", "sea", "second", "see", "seem", "seen", "sentence", "set", "she", "should", "show", "side", "sin", "since", "site", "small", "so", "some", "something", "sometime", "song", "soon", "sound", "spell", "stand", "start", "state", "still", "stop", "store", "story", "study", "such", "super", "sure", "system", "take", "talk", "team", "tell", "than", "thank", "that", "the", "their", "them", "then", "there", "these", "they", "thing", "think", "this", "those", "though", "thought", "three", "through", "time", "tip", "to", "together", "too", "took", "top", "tree", "try", "turn", "two", "type", "under", "until", "up", "us", "use", "used", "very", "walk", "want", "was", "watch", "water", "way", "we", "week", "well", "went", "were", "what", "when", "where", "which", "while", "white", "who", "why", "wide", "will", "with", "without", "won't", "word", "work", "world", "would", "write", "year", "you", "young", "your"];
+let wordArray = ["able", "about", "above", "add", "after", "again", "air", "all", "almost", "along", "also", "always", "an", "and", "animal", "another", "answer", "any", "are", "around", "at", "away", "back", "be", "because", "become", "been", "before", "began", "begin", "below", "between", "big", "book", "both", "boy", "bring", "build", "but", "button", "buy", "by", "cable", "call", "came", "can", "car", "carry", "change", "CharaChorder", "child", "children", "city", "close", "code", "come", "computer", "con", "consider", "could", "country", "course", "cut", "day", "develop", "did", "difference", "different", "do", "does", "don't", "down", "download", "each", "early", "earth", "eat", "end", "engineer", "enough", "even", "ever", "every", "example", "eye", "face", "fact", "family", "far", "fast", "father", "feel", "feet", "few", "fill", "find", "fine", "fire", "first", "follow", "food", "for", "form", "found", "four", "from", "general", "get", "girl", "give", "go", "gone", "good", "got", "govern", "great", "group", "grow", "had", "hand", "happen", "hard", "has", "have", "he", "head", "hear", "hello", "help", "her", "here", "hi", "high", "him", "his", "hit", "hold", "home", "hope", "house", "how", "however", "I'll", "I'm", "idea", "if", "important", "in", "increase", "interest", "into", "is", "isn't", "issue", "it", "it's", "just", "keep", "kind", "know", "land", "large", "last", "late", "later", "lead", "learn", "leave", "left", "let", "letter", "life", "light", "like", "line", "list", "little", "live", "load", "long", "look", "lose", "lot", "made", "make", "man", "many", "may", "me", "mean", "men", "menu", "might", "mile", "mind", "miss", "more", "most", "mother", "mountain", "move", "much", "must", "my", "name", "nation", "near", "need", "never", "new", "next", "nice", "night", "no", "not", "note", "nothing", "now", "number", "of", "off", "often", "oil", "old", "on", "once", "one", "only", "open", "or", "order", "other", "our", "out", "over", "own", "page", "paper", "part", "past", "people", "person", "picture", "place", "plan", "plant", "play", "point", "possible", "present", "print", "problem", "probably", "program", "public", "put", "question", "quick", "quickly", "quite", "read", "real", "really", "review", "right", "river", "run", "said", "same", "saw", "say", "school", "screen", "sea", "second", "see", "seem", "seen", "sentence", "set", "she", "should", "show", "side", "sin", "since", "site", "small", "so", "some", "something", "sometime", "song", "soon", "sound", "spell", "stand", "start", "state", "still", "stop", "store", "story", "study", "such", "super", "sure", "system", "take", "talk", "team", "tell", "than", "thank", "that", "the", "their", "them", "then", "there", "these", "they", "thing", "think", "this", "those", "though", "thought", "three", "through", "time", "tip", "to", "together", "too", "took", "top", "tree", "try", "turn", "two", "type", "under", "until", "up", "us", "use", "used", "very", "walk", "want", "was", "watch", "water", "way", "we", "week", "well", "went", "were", "what", "when", "where", "which", "while", "white", "who", "why", "wide", "will", "with", "without", "won't", "word", "work", "world", "would", "write", "year", "you", "young", "your"];
 
 // Initialize an object to store word statistics
 let words = {};
@@ -416,7 +416,10 @@ function displayStats() {
     // Update the DOM with the new statistics table
     let wordStatsContainer = document.getElementById('wordStats');
     wordStatsContainer.innerHTML = '';
-    wordStatsContainer.appendChild(statsTable);
+    let tableContainer = document.createElement('div');
+    tableContainer.id = 'wordStatsContainer';
+    tableContainer.appendChild(statsTable);
+    wordStatsContainer.appendChild(tableContainer);
 }
 
 function removeWord(word) {
@@ -491,6 +494,9 @@ function updateSlowWordsNum() {
         slowWordsNum = newValue;
         displayWords();  // Refresh the word display
         displayStats();  // Refresh the stats display
+        
+        // Focus on the word input field
+        document.getElementById('wordInput').focus();
     } else {
         input.value = slowWordsNum;  // Reset to previous valid value
     }
@@ -527,27 +533,32 @@ function handleFileUpload(event) {
     reader.onload = function(e) {
         const content = e.target.result;
         try {
-            // Parse the custom format
             const jsonContent = JSON.parse(content);
+            let words = [];
+
             if (jsonContent.type === "backup" && Array.isArray(jsonContent.history) && jsonContent.history.length > 0) {
+                // Handle the previous format
                 const chords = jsonContent.history[0][0].chords;
-                // Extract words from chords
-                let words = chords.map(chord => {
-                    // The word is in the second array of each chord
+                words = chords.map(chord => {
                     return String.fromCharCode(...chord[1].filter(code => code !== 0 && code < 128));
-                }).filter(word => word.length > 0); // Remove empty strings
-                
-                // Apply the filter
-                words = filterWords(words);
-                
-                const newWordSet = Array.from(new Set(words)); // Remove duplicates
-                updateWordSet(newWordSet);
+                }).filter(word => word.length > 0);
+            } else if (jsonContent.type === "chords" && Array.isArray(jsonContent.chords)) {
+                // Handle the new format
+                words = jsonContent.chords.map(chord => {
+                    return String.fromCharCode(...chord[1].filter(code => code !== 0 && code < 128));
+                }).filter(word => word.length > 0);
             } else {
                 throw new Error("Invalid file format");
             }
+
+            // Apply the filter
+            words = filterWords(words);
+            
+            const newWordSet = Array.from(new Set(words)); // Remove duplicates
+            updateWordSet(newWordSet);
         } catch (error) {
             console.error('Error parsing file:', error);
-            alert('Invalid file format. Please upload a valid backup file.');
+            alert('Invalid file format. Please upload a valid backup or chords file.');
         }
     };
     reader.readAsText(file);
@@ -578,7 +589,7 @@ function updateWordSet(newWordSet) {
     localStorage.setItem('removedWords', JSON.stringify(removedWords));
     displayWords();
     displayStats();
-    alert(`Word set updated with ${newWordSet.length} words. ${Object.keys(removedWords).length} words moved to removed set.`);
+    alert(`Word set updated with ${newWordSet.length} words.`);
 }
 
 function restoreOriginalSet() {
@@ -607,7 +618,7 @@ function restoreOriginalSet() {
     localStorage.setItem('removedWords', JSON.stringify(removedWords)); // Store removedWords in localStorage
     displayWords();
     displayStats();
-    alert(`Original word set restored. ${wordArray.length} words in the current set, ${Object.keys(removedWords).length} words in removed set.`);
+    alert(`Original word set restored. ${wordArray.length} words in the current set.`);
 }
 
 // Initialize the application when the window loads
