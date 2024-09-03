@@ -342,14 +342,16 @@ function displayStats() {
     // Combine sorted arrays: slow words first, then other words
     stats = [...slowWordStats, ...otherWordStats];
 
-    // Calculate overall average WPM
+    // Calculate overall average WPM and total attempts
     let overallAverageWPM = 0;
     let validWPMCount = 0;
-    stats.forEach(({averageWPM}) => {
+    let totalAttempts = 0;
+    stats.forEach(({averageWPM, total}) => {
         if (averageWPM !== Infinity) {
             overallAverageWPM += averageWPM;
             validWPMCount++;
         }
+        totalAttempts += total;
     });
     overallAverageWPM /= validWPMCount;
 
@@ -370,7 +372,8 @@ function displayStats() {
 
     // Create overall statistics row
     let overallRow = document.createElement('tr');
-    ['Overall', '--', overallAverageWPM.toFixed(2), ''].forEach(text => {
+    overallRow.classList.add('overall-row');
+    ['Overall', totalAttempts, overallAverageWPM.toFixed(2), ''].forEach(text => {
         let td = document.createElement('td');
         td.textContent = text;
         overallRow.appendChild(td);
@@ -379,7 +382,6 @@ function displayStats() {
 
     // Create table body with individual word statistics
     let tableBody = document.createElement('tbody');
-
     stats.forEach(({ word, total, averageWPM }) => {
         let row = document.createElement('tr');
         if (selectedSlowWords.includes(word)) {

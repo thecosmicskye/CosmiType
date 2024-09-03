@@ -41,6 +41,7 @@ body {
     background-color: #313244;
     border-radius: 10px;
     padding: 20px;
+    padding-top: 14px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-height: calc(100vh - 80px);
     overflow-y: auto;
@@ -138,7 +139,7 @@ h1 {
     width: 100%;
     min-width: 300px; /* Add this line */
     border-collapse: separate;
-    border-spacing: 0 8px;
+    border-spacing: 0 6px;
     table-layout: fixed;
 }
 
@@ -184,6 +185,12 @@ h1 {
 .statsTable tr:hover {
     background-color: #585b70;
     transform: translateY(-2px);
+}
+
+/* Add this new rule to prevent hover effects on the header */
+.statsTable thead tr:hover {
+    background-color: #45475a; /* Keep the original background color */
+    transform: none; /* Remove the translation effect */
 }
 
 .statsTable td, .statsTable th {
@@ -466,4 +473,39 @@ h1 {
 /* Remove hover effect for focus-words-container */
 .focus-words-container:hover {
     background-color: #45475a; /* Same as the non-hover state */
+}
+
+/* Style for the Overall row */
+.statsTable .overall-row {
+    background-color: #313244; /* Darker background to stand out */
+    color: #cdd6f4; /* Lighter color for better contrast */
+}
+
+.statsTable .overall-row td {
+    padding-top: 4px; /* Reduced from 15px */
+    padding-bottom: 8px; /* Reduced from 15px */
+    border-bottom: 1.5px solid #6c7086; /* Thicker, more visible border */
+}
+
+/* Add some space after the Overall row */
+.statsTable .overall-row + tr td {
+    padding-top: 12px; /* Reduced from 20px */
+}
+
+/* Ensure other rows don't get this styling */
+.statsTable tr:not(.overall-row):not(:first-child) {
+    background-color: #45475a; /* Original background color */
+}
+
+/* Adjust hover effect for non-Overall and non-header rows */
+.statsTable tr:not(.overall-row):not(thead tr):hover {
+    background-color: #585b70;
+    transform: translateY(-2px);
+}
+
+/* Disable hover effect for Overall row and header */
+.statsTable .overall-row:hover,
+.statsTable thead:first-child:hover {
+    background-color: inherit;
+    transform: none;
 }
