@@ -40,8 +40,8 @@ body {
 #wordStats {
     background-color: #313244;
     border-radius: 10px;
-    padding: 20px;
-    padding-top: 14px;
+    padding: 15px;
+    padding-top: 9px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-height: calc(100vh - 80px);
     overflow-y: auto;
@@ -197,21 +197,24 @@ h1 {
     border: none;
     line-height: 1.5; /* Adjust this value as needed */
 }
-
-.statsTable tr:first-child td:first-child {
-    border-top-left-radius: 10px;
+    
+.statsTable tr td:first-child,
+.statsTable tr th:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
 
-.statsTable tr:first-child td:last-child {
-    border-top-right-radius: 10px;
+.statsTable tr td:last-child,
+.statsTable tr th:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
-.statsTable tr:last-child td:first-child {
-    border-bottom-left-radius: 10px;
-}
-
-.statsTable tr:last-child td:last-child {
-    border-bottom-right-radius: 10px;
+/* Add padding before tbody */
+.statsTable tbody::before {
+    content: '';
+    display: block;
+    height: 5px; /* Adjust this value to increase or decrease the space */
 }
 
 @media (max-width: 1700px) {
@@ -407,16 +410,17 @@ h1 {
 /* New styles for the Focus Words box */
 .focus-words-container {
     position: relative;
-    background-color: #45475a;
+    background-color: #313244;
     color: #cdd6f4;
     border: none;
-    border-radius: 20px;
+    border-radius: 10px;
     height: 40px;
     width: auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 15px;
+    padding: 0 10px;
+    padding-left: 13px;
     cursor: default; /* Change this line */
     transition: background-color 0.3s ease;
 }
@@ -472,24 +476,46 @@ h1 {
 
 /* Remove hover effect for focus-words-container */
 .focus-words-container:hover {
-    background-color: #45475a; /* Same as the non-hover state */
+    background-color: #313244; /* Same as the non-hover state */
 }
 
 /* Style for the Overall row */
 .statsTable .overall-row {
-    background-color: #313244; /* Darker background to stand out */
-    color: #cdd6f4; /* Lighter color for better contrast */
+    background-color: #313244;
+    color: #cdd6f4;
+    position: relative; /* Add this for pseudo-element positioning */
 }
 
 .statsTable .overall-row td {
-    padding-top: 4px; /* Reduced from 15px */
-    padding-bottom: 8px; /* Reduced from 15px */
-    border-bottom: 1.5px solid #6c7086; /* Thicker, more visible border */
+    padding-top: 8px;
+    padding-bottom: 15px;
+    border-bottom: none; /* Remove any existing borders */
+}
+
+/* Create centered divider line */
+.statsTable .overall-row::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%; /* Adjust this value to change the length of the line */
+    height: 1.5px;
+    background-color: #6c7086;
+}
+
+/* Adjust cell padding as needed */
+.statsTable .overall-row td:first-child {
+    padding-left: 12px;
+}
+
+.statsTable .overall-row td:last-child {
+    padding-right: 12px;
 }
 
 /* Add some space after the Overall row */
 .statsTable .overall-row + tr td {
-    padding-top: 12px; /* Reduced from 20px */
+    padding-top: 12px;
 }
 
 /* Ensure other rows don't get this styling */
