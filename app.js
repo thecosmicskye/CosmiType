@@ -360,7 +360,7 @@ function displayStats() {
     // Create table header
     let tableHeader = document.createElement('thead');
     let headerRow = document.createElement('tr');
-    ['Word', 'Total', 'aWPM'].forEach(text => {
+    ['Word', 'Total', 'AWPM', ''].forEach(text => {
         let th = document.createElement('th');
         th.textContent = text;
         headerRow.appendChild(th);
@@ -370,7 +370,7 @@ function displayStats() {
 
     // Create overall statistics row
     let overallRow = document.createElement('tr');
-    ['Overall', '--', overallAverageWPM.toFixed(2)].forEach(text => {
+    ['Overall', '--', overallAverageWPM.toFixed(2), ''].forEach(text => {
         let td = document.createElement('td');
         td.textContent = text;
         overallRow.appendChild(td);
@@ -394,6 +394,20 @@ function displayStats() {
             td.textContent = text;
             row.appendChild(td);
         });
+        
+        // Add trash icon cell
+        let trashCell = document.createElement('td');
+        let trashIcon = document.createElement('i');
+        trashIcon.className = 'fas fa-trash-alt trash-icon';
+        trashIcon.style.display = 'none';
+        trashIcon.onclick = () => removeWord(word);
+        trashCell.appendChild(trashIcon);
+        row.appendChild(trashCell);
+        
+        // Add hover effect
+        row.onmouseover = () => trashIcon.style.display = 'inline';
+        row.onmouseout = () => trashIcon.style.display = 'none';
+        
         tableBody.appendChild(row);
     });
 
@@ -403,6 +417,23 @@ function displayStats() {
     let wordStatsContainer = document.getElementById('wordStats');
     wordStatsContainer.innerHTML = '';
     wordStatsContainer.appendChild(statsTable);
+}
+
+function removeWord(word) {
+    if (confirm(`Are you sure you want to remove "${word}" from the word set?`)) {
+        // Remove the word from the wordArray and words object
+        wordArray = wordArray.filter(w => w !== word);
+        removedWords[word] = words[word];
+        delete words[word];
+        
+        // Update localStorage
+        localStorage.setItem('words', JSON.stringify(words));
+        localStorage.setItem('removedWords', JSON.stringify(removedWords));
+        
+        // Refresh the display
+        displayWords();
+        displayStats();
+    }
 }
 
 function shiftWords() {
@@ -475,7 +506,17 @@ function filterWords(words) {
         
         // Filter out words containing "DEL"
         if (word.includes('DEL')) return false;
-              
+        
+        // Additional filters:
+        // Remove words shorter than 2 characters or longer than 15 characters
+        if (word.length < 2 || word.length > 15) return false;
+        
+        // Remove words that are all uppercase (likely abbreviations)
+        if (word === word.toUpperCase() && word.length > 1) return false;
+        
+        // Remove words with non-alphabetic characters (except apostrophes)
+        if (!/^[a-zA-Z']+$/.test(word)) return false;
+        
         return true;
     });
 }
