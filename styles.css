@@ -535,3 +535,20 @@ h1 {
     background-color: inherit;
     transform: none;
 }
+
+/* Add these styles at the end of your existing CSS */
+
+.icon-button.disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.icon-button.disabled:hover {
+    background-color: #45475a;
+}
+
+.icon-button.disabled:hover::after,
+.icon-button.disabled:hover::before {
+    opacity: 0;
+    visibility: hidden;
+}

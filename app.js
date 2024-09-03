@@ -53,6 +53,23 @@ let width = 200;
 
 let originalWordArray = [...wordArray];
 
+// Add this global variable at the top of the file
+let isDefaultWordList = localStorage.getItem('isDefaultWordList') !== 'false';
+
+// Add this function to check if the current word set is default
+function checkIfDefaultWordSet() {
+    const currentWords = new Set(Object.keys(words));
+    const originalWords = new Set(originalWordArray);
+    
+    // Check if the current word set is exactly the same as the original
+    const isDefault = currentWords.size === originalWords.size && 
+        [...currentWords].every(word => originalWords.has(word));
+    
+    isDefaultWordList = isDefault;
+    localStorage.setItem('isDefaultWordList', isDefault.toString());
+    updateRestoreButton();
+}
+
 /**
  * Function to display words on the screen
  * This function generates and displays three lines of words,
@@ -424,6 +441,7 @@ function displayStats() {
     wordStatsContainer.appendChild(tableContainer);
 }
 
+// Modify the removeWord function
 function removeWord(word) {
     if (confirm(`Are you sure you want to remove "${word}" from the word set?`)) {
         // Remove the word from the wordArray and words object
@@ -434,6 +452,11 @@ function removeWord(word) {
         // Update localStorage
         localStorage.setItem('words', JSON.stringify(words));
         localStorage.setItem('removedWords', JSON.stringify(removedWords));
+        
+        // Set isDefaultWordList to false and enable the restore button
+        isDefaultWordList = false;
+        localStorage.setItem('isDefaultWordList', 'false');
+        updateRestoreButton();
         
         // Refresh the display
         displayWords();
@@ -529,6 +552,7 @@ function filterWords(words) {
     });
 }
 
+// Modify the handleFileUpload function
 function handleFileUpload(event) {
     const file = event.target.files[0];
     if (file) {
@@ -559,6 +583,11 @@ function handleFileUpload(event) {
                 
                 const newWordSet = Array.from(new Set(words)); // Remove duplicates
                 updateWordSet(newWordSet);
+                
+                // Set isDefaultWordList to false and enable the restore button
+                isDefaultWordList = false;
+                localStorage.setItem('isDefaultWordList', 'false');
+                updateRestoreButton();
             } catch (error) {
                 console.error('Error parsing file:', error);
                 alert('Invalid file format. Please upload a valid backup or chords file.');
@@ -594,35 +623,58 @@ function updateWordSet(newWordSet) {
     displayWords();
     displayStats();
     alert(`Word set updated with ${newWordSet.length} words.`);
+
+    checkIfDefaultWordSet();
 }
 
+// Modify the restoreOriginalSet function
 function restoreOriginalSet() {
-    let tempWords = {...words, ...removedWords};
-    
-    wordArray = [...originalWordArray];
-    words = {};
-    
-    wordArray.forEach(word => {
-        if (tempWords[word]) {
-            words[word] = tempWords[word];
-        } else {
-            words[word] = {times: [], correct: 0, total: 0, lastTenCorrect: []};
-        }
-    });
-    
-    // Instead of clearing removedWords, update it with words not in the original set
-    removedWords = {};
-    Object.keys(tempWords).forEach(word => {
-        if (!wordArray.includes(word)) {
-            removedWords[word] = tempWords[word];
-        }
-    });
+    if (confirm("Are you sure you want to restore the original word set? This will remove all custom words.")) {
+        let tempWords = {...words, ...removedWords};
+        
+        wordArray = [...originalWordArray];
+        words = {};
+        
+        wordArray.forEach(word => {
+            if (tempWords[word]) {
+                words[word] = tempWords[word];
+            } else {
+                words[word] = {times: [], correct: 0, total: 0, lastTenCorrect: []};
+            }
+        });
+        
+        // Instead of clearing removedWords, update it with words not in the original set
+        removedWords = {};
+        Object.keys(tempWords).forEach(word => {
+            if (!wordArray.includes(word)) {
+                removedWords[word] = tempWords[word];
+            }
+        });
 
-    localStorage.setItem('words', JSON.stringify(words));
-    localStorage.setItem('removedWords', JSON.stringify(removedWords)); // Store removedWords in localStorage
-    displayWords();
-    displayStats();
-    alert(`Original word set restored. ${wordArray.length} words in the current set.`);
+        localStorage.setItem('words', JSON.stringify(words));
+        localStorage.setItem('removedWords', JSON.stringify(removedWords));
+        
+        // Set isDefaultWordList to true and disable the restore button
+        isDefaultWordList = true;
+        localStorage.setItem('isDefaultWordList', 'true');
+        updateRestoreButton();
+
+        displayWords();
+        displayStats();
+        alert(`Original word set restored. ${wordArray.length} words in the current set.`);
+    }
+}
+
+// Add this new function to update the restore button state
+function updateRestoreButton() {
+    const restoreButton = document.getElementById('restoreOriginalSet');
+    if (isDefaultWordList) {
+        restoreButton.disabled = true;
+        restoreButton.classList.add('disabled');
+    } else {
+        restoreButton.disabled = false;
+        restoreButton.classList.remove('disabled');
+    }
 }
 
 function initializeFocusWordsContainer() {
@@ -651,7 +703,7 @@ function initializeFocusWordsContainer() {
     });
 }
 
-// Initialize the application when the window loads
+// Modify the window.onload function
 window.onload = function() {
     document.getElementById('wordInput').focus();
     document.getElementById('wordInput').addEventListener('input', function() {
@@ -663,6 +715,8 @@ window.onload = function() {
     document.getElementById('restoreOriginalSet').addEventListener('click', restoreOriginalSet);
 
     initializeFocusWordsContainer();
+    
+    checkIfDefaultWordSet();
 };
 
 // Initial display of words and statistics
