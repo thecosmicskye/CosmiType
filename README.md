@@ -8,11 +8,14 @@ Welcome to CosmicType, where typing practice meets the cosmos! Our cutting-edge 
 
 ## ✨ Stellar Features
 
-- 🔮 **Cosmic Word Selection**: Our AI-powered system conjures words tailored to your skill level.
+- 🔮 **Cosmic Word Selection**: Our system conjures words tailored to your skill level.
 - 📊 **Galactic Performance Tracking**: Watch your progress soar with real-time speed and accuracy metrics.
 - 📈 **Constellation of Stats**: Dive into a universe of detailed performance analytics.
 - 💾 **Nebula of Progress**: Your journey is saved in the cloud (okay, it's local storage, but still cool!).
 - 🚀 **Warp Speed Difficulty**: As you improve, the challenge accelerates to light speed!
+- 🎯 **Focus Words**: Customize the number of slow words to focus on for targeted improvement.
+- 📁 **Custom Word Sets**: Upload your own word sets to practice specific vocabularies.
+- 📊 **Enhanced Statistics**: View overall performance and individual word stats in a sleek table.
 
 ## 🛸 How to Navigate CosmicType
 
@@ -21,6 +24,8 @@ Welcome to CosmicType, where typing practice meets the cosmos! Our cutting-edge 
 3. 🔬 Our quantum computers analyze your keystrokes at the subatomic level.
 4. 🧠 The AI identifies your kryptonite words and beams them to you more frequently.
 5. 📡 Receive instant transmission of your stellar (or not so stellar) performance.
+6. 🎯 Adjust your focus words to target specific areas for improvement.
+7. 📁 Upload custom word sets for specialized practice or restore the original set as needed.
 
 ## 🛠️ Cosmic Tech Stack
 
