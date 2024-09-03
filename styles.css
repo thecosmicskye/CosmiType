@@ -286,7 +286,7 @@ h1 {
 
 .trash-icon {
     cursor: pointer;
-    color: #8b8b8b;
+    color: #8c8c8c;
     font-size: 1.2em;
     transition: color 0.3s ease;
     position: relative;
@@ -294,7 +294,7 @@ h1 {
 }
 
 .trash-icon:hover {
-    color: #aeaeae;
+    color: #a7a7a7;
 }
 
 /* Add styles for the cell containing the trash icon */
@@ -522,7 +522,7 @@ h1 {
 /* Adjust hover effect for non-Overall and non-header rows */
 .statsTable tr:not(.overall-row):not(thead tr):hover {
     background-color: #585b70;
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 /* Disable hover effect for Overall row and header */
@@ -547,4 +547,20 @@ h1 {
 .icon-button.disabled:hover::before {
     opacity: 0;
     visibility: hidden;
+}
+
+#github-link {
+    position: fixed;
+    bottom: 10px;
+    left: 20px;
+    font-size: 24px;
+    color: #45475a;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    z-index: 1000;
+}
+
+#github-link:hover {
+    color: #585b70;
+    transform: translateY(-1px);
 }
