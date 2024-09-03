@@ -400,7 +400,7 @@ function displayStats() {
         // Add trash icon cell
         let trashCell = document.createElement('td');
         let trashIcon = document.createElement('i');
-        trashIcon.className = 'fas fa-trash-alt trash-icon';
+        trashIcon.className = 'fa-solid fa-trash trash-icon';
         trashIcon.style.display = 'none';
         trashIcon.onclick = () => removeWord(word);
         trashCell.appendChild(trashIcon);
