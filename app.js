@@ -35,7 +35,7 @@ let storedRemovedWords = localStorage.getItem('removedWords');
 let removedWords = storedRemovedWords ? JSON.parse(storedRemovedWords) : {};
 
 // Constants for application settings
-let slowWordsNum = 5;  // Default value, will be updated by input
+let slowWordsNum = parseInt(localStorage.getItem('slowWordsNum')) || 5;  // Default to 5 if not set
 const weightedWords = false;  // Flag to determine if word length should affect WPM calculation
 const wordsPerLine = 6;
 
@@ -525,6 +525,7 @@ function updateSlowWordsNum() {
     const newValue = parseInt(input.value);
     if (newValue > 0) {
         slowWordsNum = newValue;
+        localStorage.setItem('slowWordsNum', newValue.toString());
         displayWords();  // Refresh the word display
         displayStats();  // Refresh the stats display
         
@@ -718,7 +719,7 @@ window.onload = function() {
         checkInput(this.value);
     });
     document.getElementById('slowWordsInput').addEventListener('change', updateSlowWordsNum);
-    document.getElementById('slowWordsInput').value = slowWordsNum;  // Set initial value
+    document.getElementById('slowWordsInput').value = slowWordsNum;  // Set initial value from localStorage
     document.getElementById('wordSetUpload').addEventListener('change', handleFileUpload);
     document.getElementById('restoreOriginalSet').addEventListener('click', restoreOriginalSet);
 
