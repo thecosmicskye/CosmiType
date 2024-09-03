@@ -529,39 +529,41 @@ function filterWords(words) {
 
 function handleFileUpload(event) {
     const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const content = e.target.result;
-        try {
-            const jsonContent = JSON.parse(content);
-            let words = [];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const content = e.target.result;
+            try {
+                const jsonContent = JSON.parse(content);
+                let words = [];
 
-            if (jsonContent.type === "backup" && Array.isArray(jsonContent.history) && jsonContent.history.length > 0) {
-                // Handle the previous format
-                const chords = jsonContent.history[0][0].chords;
-                words = chords.map(chord => {
-                    return String.fromCharCode(...chord[1].filter(code => code !== 0 && code < 128));
-                }).filter(word => word.length > 0);
-            } else if (jsonContent.type === "chords" && Array.isArray(jsonContent.chords)) {
-                // Handle the new format
-                words = jsonContent.chords.map(chord => {
-                    return String.fromCharCode(...chord[1].filter(code => code !== 0 && code < 128));
-                }).filter(word => word.length > 0);
-            } else {
-                throw new Error("Invalid file format");
+                if (jsonContent.type === "backup" && Array.isArray(jsonContent.history) && jsonContent.history.length > 0) {
+                    // Handle the previous format
+                    const chords = jsonContent.history[0][0].chords;
+                    words = chords.map(chord => {
+                        return String.fromCharCode(...chord[1].filter(code => code !== 0 && code < 128));
+                    }).filter(word => word.length > 0);
+                } else if (jsonContent.type === "chords" && Array.isArray(jsonContent.chords)) {
+                    // Handle the new format
+                    words = jsonContent.chords.map(chord => {
+                        return String.fromCharCode(...chord[1].filter(code => code !== 0 && code < 128));
+                    }).filter(word => word.length > 0);
+                } else {
+                    throw new Error("Invalid file format");
+                }
+
+                // Apply the filter
+                words = filterWords(words);
+                
+                const newWordSet = Array.from(new Set(words)); // Remove duplicates
+                updateWordSet(newWordSet);
+            } catch (error) {
+                console.error('Error parsing file:', error);
+                alert('Invalid file format. Please upload a valid backup or chords file.');
             }
-
-            // Apply the filter
-            words = filterWords(words);
-            
-            const newWordSet = Array.from(new Set(words)); // Remove duplicates
-            updateWordSet(newWordSet);
-        } catch (error) {
-            console.error('Error parsing file:', error);
-            alert('Invalid file format. Please upload a valid backup or chords file.');
-        }
-    };
-    reader.readAsText(file);
+        };
+        reader.readAsText(file);
+    }
 }
 
 function updateWordSet(newWordSet) {
@@ -621,6 +623,32 @@ function restoreOriginalSet() {
     alert(`Original word set restored. ${wordArray.length} words in the current set.`);
 }
 
+function initializeFocusWordsContainer() {
+    const container = document.querySelector('.focus-words-container');
+    const input = document.getElementById('slowWordsInput');
+
+    container.addEventListener('click', function(event) {
+        // Prevent the click from propagating to parent elements
+        event.stopPropagation();
+        
+        // Focus on the input
+        input.focus();
+        
+        // Select all text in the input for easy editing
+        input.select();
+    });
+
+    // Add click and focus events to the input itself
+    input.addEventListener('click', function(event) {
+        event.stopPropagation();
+        this.select();
+    });
+
+    input.addEventListener('focus', function() {
+        this.select();
+    });
+}
+
 // Initialize the application when the window loads
 window.onload = function() {
     document.getElementById('wordInput').focus();
@@ -631,6 +659,8 @@ window.onload = function() {
     document.getElementById('slowWordsInput').value = slowWordsNum;  // Set initial value
     document.getElementById('wordSetUpload').addEventListener('change', handleFileUpload);
     document.getElementById('restoreOriginalSet').addEventListener('click', restoreOriginalSet);
+
+    initializeFocusWordsContainer();
 };
 
 // Initial display of words and statistics
