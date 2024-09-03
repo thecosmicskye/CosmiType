@@ -15,7 +15,7 @@ body {
 .allContent {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: 1fr 350px;
     gap: 30px;
     padding: 20px;
 }
@@ -73,7 +73,7 @@ h1 {
 #wordInput {
     padding: 15px;
     font-size: 1.2em;
-    width: 80%;
+    width: 40%;
     border-radius: 25px;
     border: none;
     background-color: #45475a;
@@ -101,12 +101,34 @@ h1 {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 8px;
+    table-layout: fixed;
 }
 
 .statsTable th,
 .statsTable td {
     padding: 12px;
     text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 1.5; /* Adjust this value as needed */
+}
+
+.statsTable th:first-child,
+.statsTable td:first-child {
+    width: 45%;
+}
+
+.statsTable th:nth-child(2),
+.statsTable td:nth-child(2),
+.statsTable th:nth-child(3),
+.statsTable td:nth-child(3) {
+    width: 23%;
+}
+
+.statsTable th:last-child,
+.statsTable td:last-child {
+    width: 8%;
+    text-align: center;
 }
 
 .statsTable th {
@@ -128,6 +150,7 @@ h1 {
 
 .statsTable td, .statsTable th {
     border: none;
+    line-height: 1.5; /* Adjust this value as needed */
 }
 
 .statsTable tr:first-child td:first-child {
@@ -188,4 +211,23 @@ h1 {
 #slowWordsInput::-webkit-outer-spin-button { 
     -webkit-appearance: none;
     margin: 0;
+}
+
+.trash-icon {
+    cursor: pointer;
+    color: #8b8b8b;
+    font-size: 1.2em;
+    transition: color 0.3s ease;
+    position: relative;
+    top: 2px; /* Adjust this value as needed */
+}
+
+.trash-icon:hover {
+    color: #b6b6b6;
+}
+
+/* Add styles for the cell containing the trash icon */
+.statsTable td:last-child {
+    position: relative;
+    vertical-align: middle;
 }
