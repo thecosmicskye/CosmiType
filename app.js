@@ -56,6 +56,16 @@ let originalWordArray = [...wordArray];
 // Add this global variable at the top of the file
 let isDefaultWordList = localStorage.getItem('isDefaultWordList') !== 'false';
 
+const defaultLeastTypedWordChance = 10;
+let leastTypedWordChance = parseInt(localStorage.getItem('leastTypedWordChance')) || defaultLeastTypedWordChance;
+
+function getLeastTypedWords() {
+    const entries = Object.entries(words);
+    const leastTotal = Math.min(...entries.map(([_, stats]) => stats.total));
+    const leastTypedWords = entries.filter(([_, stats]) => stats.total === leastTotal);
+    return leastTypedWords;
+}
+
 // Add this function to check if the current word set is default
 function checkIfDefaultWordSet() {
     const currentWords = new Set(Object.keys(words));
@@ -145,13 +155,18 @@ let lastWord = '';
 function getRandomWords(wordsArray, count) {
     let randomWords = [];
     let lastWord = '';
+    const leastTypedWords = getLeastTypedWords();
+
     for (let i = 0; i < count; i++) {
-        let randomIndex;
         let selectedWord;
-        do {
-            randomIndex = Math.floor(Math.random() * wordsArray.length);
-            selectedWord = wordsArray[randomIndex];
-        } while (selectedWord === lastWord && wordsArray.length > 1);
+        if (Math.random() * 100 < leastTypedWordChance) {
+            selectedWord = leastTypedWords[Math.floor(Math.random() * leastTypedWords.length)][0];
+        } else {
+            do {
+                let randomIndex = Math.floor(Math.random() * wordsArray.length);
+                selectedWord = wordsArray[randomIndex];
+            } while (selectedWord === lastWord && wordsArray.length > 1);
+        }
         randomWords.push(selectedWord);
         lastWord = selectedWord;
     }
@@ -712,6 +727,37 @@ function initializeFocusWordsContainer() {
     });
 }
 
+function initializeLeastTypedChanceContainer() {
+    const container = document.querySelector('.least-typed-chance-container');
+    const input = document.getElementById('leastTypedChanceInput');
+
+    console.log('Container:', container);
+    console.log('Input:', input);
+
+    if (!container || !input) {
+        console.error('Container or input not found');
+        return;
+    }
+
+    container.addEventListener('click', function(event) {
+        console.log('Container clicked');
+        event.stopPropagation();
+        input.focus();
+        input.select();
+    });
+
+    input.addEventListener('click', function(event) {
+        console.log('Input clicked');
+        event.stopPropagation();
+        this.select();
+    });
+
+    input.addEventListener('focus', function() {
+        console.log('Input focused');
+        this.select();
+    });
+}
+
 // Modify the window.onload function
 window.onload = function() {
     document.getElementById('wordInput').focus();
@@ -724,8 +770,24 @@ window.onload = function() {
     document.getElementById('restoreOriginalSet').addEventListener('click', restoreOriginalSet);
 
     initializeFocusWordsContainer();
+    initializeLeastTypedChanceContainer(); // Add this line
     
     checkIfDefaultWordSet();
+
+    document.getElementById('leastTypedChanceInput').value = leastTypedWordChance;
+    document.getElementById('leastTypedChanceInput').addEventListener('change', function() {
+        const newValue = parseInt(this.value);
+        if (newValue >= 0 && newValue <= 100) {
+            leastTypedWordChance = newValue;
+            localStorage.setItem('leastTypedWordChance', newValue.toString());
+            displayWords();  // Refresh the word display
+            
+            // Focus on the word input field
+            document.getElementById('wordInput').focus();
+        } else {
+            this.value = leastTypedWordChance;
+        }
+    });
 };
 
 // Initial display of words and statistics
