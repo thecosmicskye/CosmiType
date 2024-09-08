@@ -16,6 +16,7 @@ Welcome to CosmicType, where typing practice meets the cosmos! Our cutting-edge 
 - 🎯 **Focus Words**: Customize the number of slow words to focus on for targeted improvement.
 - 📁 **Custom Word Sets**: Upload your own word sets to practice specific vocabularies.
 - 📊 **Enhanced Statistics**: View overall performance and individual word stats in a sleek table.
+- 🎲 **Least Typed Word Boost**: Set a custom chance for your least typed words to appear more frequently.
 
 ## 🛸 How to Navigate CosmicType
 
@@ -26,6 +27,7 @@ Welcome to CosmicType, where typing practice meets the cosmos! Our cutting-edge 
 5. 📡 Receive instant transmission of your stellar (or not so stellar) performance.
 6. 🎯 Adjust your focus words to target specific areas for improvement.
 7. 📁 Upload custom word sets for specialized practice or restore the original set as needed.
+8. 🎲 Set your preferred chance for least typed words to appear, boosting your cosmic vocabulary.
 
 ## 🛠️ Cosmic Tech Stack
 
