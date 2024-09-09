@@ -159,14 +159,15 @@ function getRandomWords(wordsArray, count) {
 
     for (let i = 0; i < count; i++) {
         let selectedWord;
-        if (Math.random() * 100 < leastTypedWordChance) {
-            selectedWord = leastTypedWords[Math.floor(Math.random() * leastTypedWords.length)][0];
-        } else {
-            do {
+        do {
+            if (Math.random() * 100 < leastTypedWordChance) {
+                selectedWord = leastTypedWords[Math.floor(Math.random() * leastTypedWords.length)][0];
+            } else {
                 let randomIndex = Math.floor(Math.random() * wordsArray.length);
                 selectedWord = wordsArray[randomIndex];
-            } while (selectedWord === lastWord && wordsArray.length > 1);
-        }
+            }
+        } while (selectedWord === lastWord && (leastTypedWords.length > 1 || wordsArray.length > 1));
+
         randomWords.push(selectedWord);
         lastWord = selectedWord;
     }
