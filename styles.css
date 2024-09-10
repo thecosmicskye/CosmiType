@@ -565,7 +565,7 @@ h1 {
     transform: translateY(-1px);
 }
 
-.least-typed-chance-container {
+.longest-untyped-chance-container {
     position: relative;
     background-color: #313244;
     color: #cdd6f4;
@@ -582,13 +582,13 @@ h1 {
     transition: background-color 0.3s ease;
 }
 
-.least-typed-chance-container label {
+.longest-untyped-chance-container label {
     font-size: 17px;
     margin-right: 15px;
     white-space: nowrap;
 }
 
-#leastTypedChanceInput {
+#longestUntypedChanceInput {
     width: 30px;
     background-color: #585b70;
     border: none;
@@ -600,18 +600,18 @@ h1 {
     cursor: text;
 }
 
-#leastTypedChanceInput::-webkit-inner-spin-button, 
-#leastTypedChanceInput::-webkit-outer-spin-button { 
+#longestUntypedChanceInput::-webkit-inner-spin-button, 
+#longestUntypedChanceInput::-webkit-outer-spin-button { 
     -webkit-appearance: none;
     margin: 0;
 }
 
-#leastTypedChanceInput {
+#longestUntypedChanceInput {
     -moz-appearance: textfield;
     appearance: textfield;
 }
 
-.least-typed-chance-container::after {
+.longest-untyped-chance-container::after {
     content: attr(data-tooltip);
     position: absolute;
     top: 50%;
@@ -637,12 +637,12 @@ h1 {
     align-items: center;
 }
 
-.least-typed-chance-container:hover::after {
+.longest-untyped-chance-container:hover::after {
     opacity: 1;
     visibility: visible;
 }
 
-.least-typed-chance-container::before {
+.longest-untyped-chance-container::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -656,7 +656,7 @@ h1 {
     pointer-events: none;
 }
 
-.least-typed-chance-container:hover::before {
+.longest-untyped-chance-container:hover::before {
     opacity: 1;
     visibility: visible;
 }
