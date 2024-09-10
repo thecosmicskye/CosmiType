@@ -56,14 +56,66 @@ let originalWordArray = [...wordArray];
 // Add this global variable at the top of the file
 let isDefaultWordList = localStorage.getItem('isDefaultWordList') !== 'false';
 
-const defaultLeastTypedWordChance = 10;
-let leastTypedWordChance = parseInt(localStorage.getItem('leastTypedWordChance')) || defaultLeastTypedWordChance;
+const defaultLongestUntypedWordChance = 10;
+let longestUntypedWordChance = parseInt(localStorage.getItem('longestUntypedWordChance')) || defaultLongestUntypedWordChance;
 
-function getLeastTypedWords() {
-    const entries = Object.entries(words);
-    const leastTotal = Math.min(...entries.map(([_, stats]) => stats.total));
-    const leastTypedWords = entries.filter(([_, stats]) => stats.total === leastTotal);
-    return leastTypedWords;
+// Initialize wordBuffer with all words from wordArray
+wordBuffer = [...wordArray];
+
+// Load any saved buffer from localStorage
+let storedBuffer = localStorage.getItem('wordBuffer');
+if (storedBuffer) {
+    wordBuffer = JSON.parse(storedBuffer);
+} else {
+    // If no stored buffer, create a new one based on typing frequency
+    wordBuffer = sortWordsByTypingFrequency();
+}
+
+function sortWordsByTypingFrequency() {
+    return Object.keys(words).sort((a, b) => {
+        const freqA = words[a].total;
+        const freqB = words[b].total;
+        if (freqA === freqB) {
+            // Tie-breaker: random order
+            return Math.random() - 0.5;
+        }
+        return freqA - freqB; // Sort from least typed to most typed
+    });
+}
+
+function getLongestUntypedWords(count = 10) {
+    return wordBuffer.slice(0, count);
+}
+
+// Add this helper function at the beginning of your file
+function getFirstAndLastN(arr, n) {
+    return {
+        first: arr.slice(0, n),
+        last: arr.slice(-n)
+    };
+}
+
+// Modify the updateWordBuffer function
+function updateWordBuffer(typedWord) {
+    // Find the index of the typed word in the buffer
+    const index = wordBuffer.indexOf(typedWord);
+    
+    // If the word is found, remove it from its current position
+    if (index !== -1) {
+        wordBuffer.splice(index, 1);
+    }
+    
+    // Add the typed word to the end of the buffer
+    wordBuffer.push(typedWord);
+    
+    // Save the updated buffer to localStorage
+    localStorage.setItem('wordBuffer', JSON.stringify(wordBuffer));
+
+    // Log the first and last ten words of the buffer
+    const { first, last } = getFirstAndLastN(wordBuffer, 10);
+    console.log('Word Buffer Updated:');
+    console.log('First 10 words:', first);
+    console.log('Last 10 words:', last);
 }
 
 // Add this function to check if the current word set is default
@@ -155,18 +207,18 @@ let lastWord = '';
 function getRandomWords(wordsArray, count) {
     let randomWords = [];
     let lastWord = '';
-    const leastTypedWords = getLeastTypedWords();
+    const longestUntypedWords = getLongestUntypedWords();
 
     for (let i = 0; i < count; i++) {
         let selectedWord;
         do {
-            if (Math.random() * 100 < leastTypedWordChance) {
-                selectedWord = leastTypedWords[Math.floor(Math.random() * leastTypedWords.length)][0];
+            if (Math.random() * 100 < longestUntypedWordChance && longestUntypedWords.length > 0) {
+                selectedWord = longestUntypedWords[Math.floor(Math.random() * longestUntypedWords.length)];
             } else {
                 let randomIndex = Math.floor(Math.random() * wordsArray.length);
                 selectedWord = wordsArray[randomIndex];
             }
-        } while (selectedWord === lastWord && (leastTypedWords.length > 1 || wordsArray.length > 1));
+        } while (selectedWord === lastWord && wordsArray.length > 1);
 
         randomWords.push(selectedWord);
         lastWord = selectedWord;
@@ -191,6 +243,9 @@ function checkInput(value) {
         // Update word statistics
         words[correctWord].times.push(wordTime);
         words[correctWord].total++;
+
+        // Update the word buffer
+        updateWordBuffer(correctWord);
 
         // Check if the typed word is correct and apply appropriate highlighting
         let isCorrect = typedWord === correctWord;
@@ -728,9 +783,9 @@ function initializeFocusWordsContainer() {
     });
 }
 
-function initializeLeastTypedChanceContainer() {
-    const container = document.querySelector('.least-typed-chance-container');
-    const input = document.getElementById('leastTypedChanceInput');
+function initializeLongestUntypedChanceContainer() {
+    const container = document.querySelector('.longest-untyped-chance-container');
+    const input = document.getElementById('longestUntypedChanceInput');
 
     console.log('Container:', container);
     console.log('Input:', input);
@@ -771,24 +826,41 @@ window.onload = function() {
     document.getElementById('restoreOriginalSet').addEventListener('click', restoreOriginalSet);
 
     initializeFocusWordsContainer();
-    initializeLeastTypedChanceContainer(); // Add this line
+    initializeLongestUntypedChanceContainer(); // Add this line
     
     checkIfDefaultWordSet();
 
-    document.getElementById('leastTypedChanceInput').value = leastTypedWordChance;
-    document.getElementById('leastTypedChanceInput').addEventListener('change', function() {
+    document.getElementById('longestUntypedChanceInput').value = longestUntypedWordChance;
+    document.getElementById('longestUntypedChanceInput').addEventListener('change', function() {
         const newValue = parseInt(this.value);
         if (newValue >= 0 && newValue <= 100) {
-            leastTypedWordChance = newValue;
-            localStorage.setItem('leastTypedWordChance', newValue.toString());
+            longestUntypedWordChance = newValue;
+            localStorage.setItem('longestUntypedWordChance', newValue.toString());
             displayWords();  // Refresh the word display
             
             // Focus on the word input field
             document.getElementById('wordInput').focus();
         } else {
-            this.value = leastTypedWordChance;
+            this.value = longestUntypedWordChance;
         }
     });
+
+    // Initialize wordBuffer
+    let storedBuffer = localStorage.getItem('wordBuffer');
+    if (storedBuffer) {
+        wordBuffer = JSON.parse(storedBuffer);
+    } else {
+        // If no stored buffer, create a new one based on typing frequency
+        wordBuffer = sortWordsByTypingFrequency();
+    }
+
+    // Log the initial state of the buffer
+    const { first, last } = getFirstAndLastN(wordBuffer, 10);
+    console.log('Initial Word Buffer:');
+    console.log('First 10 words:', first);
+    console.log('Last 10 words:', last);
+
+    // ... (rest of the code)
 };
 
 // Initial display of words and statistics
